@@ -2,8 +2,8 @@
 {
     public class Tenant : BaseEntity
     {
-        private readonly List<User> _users = new();
-        private readonly List<Project> _projects = new();
+        private readonly HashSet<User> _users = new();
+        private readonly HashSet<Project> _projects = new();
 
         public Guid OwnerId { get; private set; }
 
@@ -13,8 +13,8 @@
 
         public bool IsActive { get; private set; }
 
-        public IReadOnlyCollection<User> Users => _users.AsReadOnly();
-        public IReadOnlyCollection<Project> Projects => _projects.AsReadOnly();
+        public IReadOnlyCollection<User> Users => _users;
+        public IReadOnlyCollection<Project> Projects => _projects;
 
         public Tenant(Guid ownerId, string name, string identifier)
         {
@@ -38,9 +38,6 @@
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            if (_users.Any(u => u.Id == user.Id))
-                return;
-
             _users.Add(user);
         }
 
@@ -49,9 +46,6 @@
         {
             if (project == null)
                 throw new ArgumentNullException(nameof(project));
-
-            if (_projects.Any(p => p.Id == project.Id))
-                return;
 
             _projects.Add(project);
         }
